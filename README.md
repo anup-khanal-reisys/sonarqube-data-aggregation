@@ -43,6 +43,29 @@ You can supply as many metics data that you need as long as the key matches the 
 $measures = $client->measures->component(['componentKey'=>'[Project Name]]','metricKeys'=>'[[Metric 1],[Metric 2],[Metric 3],...]']);
 ```
 
+### Response Format
+Following is the response format
+```JSON
+{
+sonar.reisys.com: [
+    {
+      project: "Project Name",
+      metrics: {
+        vulnerabilities: "0",
+        coverage: "0.0",
+        reliability_rating: "D",
+        bugs: "114",
+        sqale_rating: "C",
+        code_smells: "2378",
+        security_rating: "A"
+      }
+    },
+    ...,
+    ...
+]
+}
+```
+
 <a id="metrics"></a>Available Metrics Data for SonarQube Web API
 ------------
 [https://docs.sonarqube.org/display/SONAR/Metric+Definitions](https://docs.sonarqube.org/display/SONAR/Metric+Definitions)
