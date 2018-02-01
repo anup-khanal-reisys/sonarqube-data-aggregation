@@ -1,2 +1,2 @@
 # sonar-query
-PHP based app to query SonarCube Data
+PHP based app to query SonarQube Data
