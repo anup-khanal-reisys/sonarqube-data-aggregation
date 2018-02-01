@@ -14,7 +14,13 @@ $ curl -sS https://getcomposer.org/installer | php
 $ sudo mv composer.phar /usr/local/bin/composer
 ```
 
-General API Usage
+1. `git clone` the app and `cd` into it
+2. Open index.php and supply the appropriate information (hostname, username and password) for SonarQube connections in `$client` (see [General API Usage](#general-api-usage) for details)
+3. For multiple sources you can have `$client1`, `$client2` and so on.
+4. You can run the application locally using XAMPP or any machine running a LAMP stack (although we don't need MySQL).
+4. The application will be available on `localhost:8080` or simply `localhost`.
+
+<a id="general-api-usage"></a>General API Usage
 ------------
 ```php
 $client = new \SonarQube\Client('[hostname]/api', '[username]', '[password]');
@@ -32,11 +38,12 @@ $projects = $client->projects->search();
 ```
 
 ### Metrics Data
+You can supply as many metics data that you need as long as the key matches the available metric key. Refer to the [Available Metrics Data for SonarQube Web API](#metrics) for available metrics.
 ```php
 $measures = $client->measures->component(['componentKey'=>'[Project Name]]','metricKeys'=>'[[Metric 1],[Metric 2],[Metric 3],...]']);
 ```
 
-Available Metrics Data for SonarQube Web API
+<a id="metrics"></a>Available Metrics Data for SonarQube Web API
 ------------
 [https://docs.sonarqube.org/display/SONAR/Metric+Definitions](https://docs.sonarqube.org/display/SONAR/Metric+Definitions)
 
@@ -112,3 +119,4 @@ Available Metrics Data for SonarQube Web API
 | test_errors	| Number of unit tests that have failed. |
 | test_failures	| Number of unit tests that have failed with an unexpected exception. |
 | test_success_density	| Test success density = (Unit tests - (Unit test errors + Unit test failures)) / Unit tests * 100 |
+
