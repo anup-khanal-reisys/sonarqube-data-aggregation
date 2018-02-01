@@ -1,0 +1,28 @@
+{
+  "name": "anup-khanal-reisys/sonar-query",
+  "type": "library",
+  "description": "PHP based API client to query SonarQube Data",
+  "homepage": "https://github.com/anup-khanal-reisys/sonar-query",
+  "keywords": ["sonar", "sonarqube", "api"],
+  "license": "GPL v3",
+  "authors": [
+    {
+      "name": "Anup Khanal",
+      "email": "anup.khanal@reisystems.com",
+      "homepage": "http://anupkhanal.info"
+    },
+    {
+      "name": "Jean Bordat",
+      "email": "bordat.jean@gmail.com",
+      "homepage": "http://jean.bordat.me/"
+    }
+  ],
+  "require": {
+    "php":                ">=5.3.2",
+    "ext-curl":           "*",
+    "kriswallsmith/buzz": ">=0.7"
+  },
+  "autoload": {
+    "psr-0": { "SonarQube\\": "lib/" }
+  }
+}
