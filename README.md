@@ -25,9 +25,9 @@ $ sudo mv composer.phar /usr/local/bin/composer
 ------------
 ```php
 $client = new \SonarQube\Client('[hostname]/api', '[username]', '[password]');
-$authentication = $client->api('authentication')->validate();
 /*---------------- Using Tokens --------------------------*/
 //$client = new \SonarQube\Client('https://sonar.reisys.com/api/', '[token]', '');
+$authentication = $client->api('authentication')->validate();
 ```
 
 ### Specific Project
