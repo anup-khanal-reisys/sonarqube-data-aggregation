@@ -24,4 +24,12 @@ class Measures extends AbstractApi implements MeasuresInterface {
 
         return $this->post('measures/component_tree', $parameters);
     }
+    /**
+     * @inheritDoc
+     */
+    public function searchHistory(array $parameters = array()) {
+        $this->checkParamIsSet($parameters, array("metrics"));
+
+        return $this->post('measures/search_history', $parameters);
+    }
 }

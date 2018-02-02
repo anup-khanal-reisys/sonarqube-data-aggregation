@@ -3,35 +3,55 @@ header("Content-type:application/json");
 /*---------------- Use Buzz HTTPClient -------------------*/
 require_once 'vendor/autoload.php';
 /*--------------------------------------------------------*/
-$client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'username', 'password');
+// ------------- Connecting with Username and Password -------------- //
+//$client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'username', 'password');
 
-/*---------------- Using Tokens --------------------------*/
+// ------------- Connecting with tokens -------------- //
 //$client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'token', '');
 
+$arrayQuery = array();
+$arrayA = queryMetrics('[HostnameA]/api', '');
+$arrayB = queryMetrics('[HostnameB]/api', '');
+$arrayC = queryMetrics('[HostnameC]/api', '');
+$arrayQuery[] = $arrayA;
+$arrayQuery[] = $arrayB;
+$arrayQuery[] = $arrayC;
+echo json_encode($arrayQuery);
 
-$authentication = $client->api('authentication')->validate();
-$projects = $client->projects->search();
-$array = array();
-foreach ($projects as $project)
-{
-    $arrayParent = array();
-    $arrayChild = array();
-    $arrayParent['project'] = $project["k"];
-    $measures = $client->measures->component(['componentKey'=>$project["k"],'metricKeys'=>'bugs,reliability_rating,vulnerabilities,security_rating,code_smells,sqale_rating,coverage']);
-    $measuresVal = $measures['component']['measures'];
-    foreach ($measuresVal as $measure){
-      if($measure['metric']=="reliability_rating" || $measure['metric']=="security_rating" || $measure['metric']=="sqale_rating"){
-        $arrayChild[$measure['metric']] = ratingChecker($measure['value']);
-      }else{
-        $arrayChild[$measure['metric']] = $measure['value'];
+function queryMetrics($hostname, $token){
+  $client = new \SonarQube\Client($hostname, $token, '');
+  $authentication = $client->api('authentication')->validate();
+  $projects = $client->projects->search();
+  $array = array();
+  foreach ($projects as $project)
+  {
+      $arrayParent = array();
+      $arrayChild = array();
+      $arrayParent['project'] = $project["k"];
+      $measures = $client->measures->component(['componentKey'=>$project["k"],'additionalFields'=>'periods','metricKeys'=>'bugs,reliability_rating,vulnerabilities,security_rating,code_smells,sqale_rating,coverage,new_bugs,new_coverage,new_code_smells,new_vulnerabilities']);
+      $measuresVal = $measures['component']['measures'];
+      $periodsVal = $measures['periods'];
+      foreach ($measuresVal as $measure){
+        if($measure['metric']=="reliability_rating" || $measure['metric']=="security_rating" || $measure['metric']=="sqale_rating"){
+          $arrayChild[$measure['metric']] = ratingChecker($measure['value']);
+        }else if($measure['metric']=="new_coverage" || $measure['metric']=="new_bugs" || $measure['metric']=="new_vulnerabilities" || $measure['metric']=="new_code_smells"){
+          foreach($measure['periods'] as $newMeasure){
+            $arrayChild[$measure['metric']] = $newMeasure['value'];
+          }
+        }else{
+          $arrayChild[$measure['metric']] = $measure['value'];
+        }
       }
-    }
-    $arrayParent['metrics'] = $arrayChild;
-    $array[] = $arrayParent;
+      foreach ($periodsVal as $period){
+          $arrayChild['last_analyzed'] = $period['date'];
+      }
+      $arrayParent['metrics'] = $arrayChild;
+      $array[] = $arrayParent;
+  }
+    $arrayServer = array();
+    $arrayServer[$hostname] = $array;
+    return $arrayServer;
 }
-$arrayServer = array();
-$arrayServer['sonar.reisys.com'] = $array;
-echo json_encode($arrayServer);
 
 function ratingChecker($rscale){
   if($rscale==1.0){
