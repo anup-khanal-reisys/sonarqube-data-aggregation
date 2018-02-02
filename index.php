@@ -4,6 +4,11 @@ header("Content-type:application/json");
 require_once 'vendor/autoload.php';
 /*--------------------------------------------------------*/
 $client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'username', 'password');
+
+/*---------------- Using Tokens --------------------------*/
+//$client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'token', '');
+
+
 $authentication = $client->api('authentication')->validate();
 $projects = $client->projects->search();
 $array = array();
