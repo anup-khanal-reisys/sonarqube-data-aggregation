@@ -49,24 +49,33 @@ $measures = $client->measures->component(['componentKey'=>'[Project Name]]','met
 ### Response Format
 Following is the response format
 ```
-{
-sonar.reisys.com: [
+[
     {
-      project: "Project Name",
-      metrics: {
-        vulnerabilities: "0",
-        coverage: "0.0",
-        reliability_rating: "D",
-        bugs: "114",
-        sqale_rating: "C",
-        code_smells: "2378",
-        security_rating: "A"
-      }
+        https://sonar.reisys.com/api/: [
+        {
+            project: "Project Name",
+            metrics: {
+                reliability_rating: "A",
+                new_code_smells: "4",
+                sqale_rating: "A",
+                vulnerabilities: "0",
+                new_vulnerabilities: "0",
+                coverage: "42.9",
+                new_bugs: "0",
+                bugs: "0",
+                security_rating: "A",
+                new_coverage: "1.2820512820512822",
+                code_smells: "557",
+                last_analyzed: "2018-01-19T10:53:51-0500"
+            }
+        },
+        ...,
+        ...
+        ]
     },
     ...,
     ...
 ]
-}
 ```
 
 <a id="metrics"></a>Available Metrics Data for SonarQube Web API
