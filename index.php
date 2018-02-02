@@ -10,9 +10,9 @@ require_once 'vendor/autoload.php';
 //$client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'token', '');
 
 $arrayQuery = array();
-$arrayA = queryMetrics('[HostnameA]/api', '');
-$arrayB = queryMetrics('[HostnameB]/api', '');
-$arrayC = queryMetrics('[HostnameC]/api', '');
+$arrayA = queryMetrics('[HostnameA]/api', '[token]');
+$arrayB = queryMetrics('[HostnameB]/api', '[token]');
+$arrayC = queryMetrics('[HostnameC]/api', '[token]');
 $arrayQuery[] = $arrayA;
 $arrayQuery[] = $arrayB;
 $arrayQuery[] = $arrayC;
