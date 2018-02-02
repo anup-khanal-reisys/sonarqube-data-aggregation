@@ -16,7 +16,7 @@ $ sudo mv composer.phar /usr/local/bin/composer
 
 1. `git clone` the app and `cd` into it
 2. run `composer install`
-3. Open index.php and supply the appropriate information (hostname, username and password) for SonarQube connections in `$client` (see [General API Usage](#general-api-usage) for details)
+3. Open index.php and supply the appropriate information (hostname, username and password or token) for SonarQube connections in `$client` (see [General API Usage](#general-api-usage) for details)
 4. For multiple sources you can have `$client1`, `$client2` and so on.
 5. You can run the application locally using XAMPP or any machine running a LAMP stack (although we don't need MySQL).
 6. The application will be available on `localhost:8080` or simply `localhost`.
@@ -26,6 +26,8 @@ $ sudo mv composer.phar /usr/local/bin/composer
 ```php
 $client = new \SonarQube\Client('[hostname]/api', '[username]', '[password]');
 $authentication = $client->api('authentication')->validate();
+/*---------------- Using Tokens --------------------------*/
+//$client = new \SonarQube\Client('https://sonar.reisys.com/api/', '[token]', '');
 ```
 
 ### Specific Project
