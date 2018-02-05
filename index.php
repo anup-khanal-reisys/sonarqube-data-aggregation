@@ -9,14 +9,35 @@ require_once 'vendor/autoload.php';
 // ------------- Connecting with tokens -------------- //
 //$client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'token', '');
 
-$arrayQuery = array();
-$arrayA = queryMetrics('[HostnameA]/api', '[token]');
-$arrayB = queryMetrics('[HostnameB]/api', '[token]');
-$arrayC = queryMetrics('[HostnameC]/api', '[token]');
-$arrayQuery[] = $arrayA;
-$arrayQuery[] = $arrayB;
-$arrayQuery[] = $arrayC;
-echo json_encode($arrayQuery);
+$cache_file = dirname(__FILE__) . '/api-cache.array';
+$settings_file = dirname(__FILE__) . '/settings.array';
+$purgeCache = false;
+$settings = unserialize(file_get_contents($settings_file));
+if(empty($settings)){
+  $expires = time() + 24*60*60;
+  $setting = array();
+  $setting['expires'] = $expires;
+  file_put_contents($settings_file, serialize($setting));
+}else{
+  $expires = $settings['expires'];
+}
+if ( time() > $expires || empty(unserialize(file_get_contents($cache_file))) || $purgeCache) {
+  $arrayQuery = array();
+  $arrayA = queryMetrics('[HostnameA]/api', '[token]');
+  $arrayB = queryMetrics('[HostnameB]/api', '[token]');
+  $arrayC = queryMetrics('[HostnameC]/api', '[token]');
+  $arrayQuery[] = $arrayA;
+  $arrayQuery[] = $arrayB;
+  $arrayQuery[] = $arrayC;
+  if ( $arrayQuery ){
+    file_put_contents($cache_file, serialize($arrayQuery));
+  }else{
+    unlink($cache_file);
+  }
+  echo json_encode($arrayQuery);
+} else {
+  echo json_encode(unserialize(file_get_contents($cache_file)));
+}
 
 function queryMetrics($hostname, $token){
   $client = new \SonarQube\Client($hostname, $token, '');
