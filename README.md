@@ -18,8 +18,9 @@ $ sudo mv composer.phar /usr/local/bin/composer
 2. run `composer install`
 3. Open index.php and supply the appropriate information (hostname, username and password or token) for SonarQube connections in `$client` (see [General API Usage](#general-api-usage) for details)
 4. For multiple sources you can have `$client1`, `$client2` and so on.
-5. You can run the application locally using XAMPP or any machine running a LAMP stack (although we don't need MySQL).
-6. The application will be available on `localhost:8080` or simply `localhost`.
+5. Make sure `api-cache.array` and `settings.array` have write permissions by doing `chmod 777 api-cache.array` and `chmod 777 settings.array`. If you wish, you can use `settings.array` to declare other static variables too like hostname, tokens, etc.
+6. You can run the application locally using XAMPP or any machine running a LAMP stack (although we don't need MySQL).
+7. The application will be available on `localhost:8080` or simply `localhost`.
 
 <a id="general-api-usage"></a>General API Usage
 ------------
