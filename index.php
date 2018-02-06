@@ -10,6 +10,7 @@ require_once 'vendor/autoload.php';
 //$client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'token', '');
 
 $cache_file = dirname(__FILE__) . '/api-cache.array';
+$json_file = dirname(__FILE__) . '/api-cache.json';
 $settings_file = dirname(__FILE__) . '/settings.array';
 $purgeCache = false;
 $settings = unserialize(file_get_contents($settings_file));
@@ -31,6 +32,7 @@ if ( time() > $expires || empty(unserialize(file_get_contents($cache_file))) || 
   $arrayQuery[] = $arrayC;
   if ( $arrayQuery ){
     file_put_contents($cache_file, serialize($arrayQuery));
+    file_put_contents($json_file, json_encode($arrayQuery));
   }else{
     unlink($cache_file);
   }
