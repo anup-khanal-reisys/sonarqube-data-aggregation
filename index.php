@@ -4,10 +4,10 @@ header("Content-type:application/json");
 require_once 'vendor/autoload.php';
 /*--------------------------------------------------------*/
 // ------------- Connecting with Username and Password -------------- //
-//$client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'username', 'password');
+//$client = new \SonarQube\Client('hostname', 'username', 'password');
 
 // ------------- Connecting with tokens -------------- //
-//$client = new \SonarQube\Client('https://sonar.reisys.com/api/', 'token', '');
+//$client = new \SonarQube\Client('hostname', 'token', '');
 
 $cache_file = dirname(__FILE__) . '/api-cache.array';
 $settings_file = dirname(__FILE__) . '/settings.array';
