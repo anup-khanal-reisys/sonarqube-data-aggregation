@@ -52,7 +52,7 @@ Following is the response format
 ```
 [
     {
-        https://sonar.reisys.com/api/: [
+        [Hostname]: [
         {
             project: "Project Name",
             metrics: {
