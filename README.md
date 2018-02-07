@@ -27,7 +27,7 @@ $ sudo mv composer.phar /usr/local/bin/composer
 ```php
 $client = new \SonarQube\Client('[hostname]/api', '[username]', '[password]');
 /*---------------- Using Tokens --------------------------*/
-//$client = new \SonarQube\Client('https://sonar.reisys.com/api/', '[token]', '');
+//$client = new \SonarQube\Client('[hostname]', '[token]', '');
 $authentication = $client->api('authentication')->validate();
 ```
 
@@ -52,7 +52,7 @@ Following is the response format
 ```
 [
     {
-        https://sonar.reisys.com/api/: [
+        [Hostname]: [
         {
             project: "Project Name",
             metrics: {
