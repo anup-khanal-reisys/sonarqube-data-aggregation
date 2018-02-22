@@ -64,7 +64,7 @@ function queryMetrics($hostname, $token){
       $arrayParent = array();
       $arrayChild = array();
       $arrayParent['project'] = $project["k"];
-      $measures = $client->measures->component(['componentKey'=>$project["k"],'additionalFields'=>'periods','metricKeys'=>'bugs,reliability_rating,new_reliability_rating,vulnerabilities,security_rating,new_security_rating,code_smells,sqale_rating,coverage,new_bugs,new_coverage,new_code_smells,new_vulnerabilities']);
+      $measures = $client->measures->component(['componentKey'=>$project["k"],'additionalFields'=>'periods','metricKeys'=>'bugs,reliability_rating,new_reliability_rating,vulnerabilities,security_rating,new_security_rating,code_smells,sqale_rating,new_maintainability_rating,coverage,new_bugs,new_coverage,new_code_smells,new_vulnerabilities']);
       $measuresVal = $measures['component']['measures'];
       $periodsVal = $measures['periods'];
       foreach ($measuresVal as $measure){
@@ -74,7 +74,7 @@ function queryMetrics($hostname, $token){
           foreach($measure['periods'] as $newMeasure){
             $arrayChild[$measure['metric']] = $newMeasure['value'];
           }
-        }else if($measure['metric']=="new_reliability_rating" || $measure['metric']=="new_security_rating"){
+        }else if($measure['metric']=="new_reliability_rating" || $measure['metric']=="new_security_rating" || $measure['metric']=="new_maintainability_rating"){
             $arrayChild[$measure['metric']] = ratingChecker($measure['periods'][0]['value']);
         }else{
             $arrayChild[$measure['metric']] = $measure['value'];
