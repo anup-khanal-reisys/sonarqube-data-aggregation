@@ -12,8 +12,17 @@ require_once 'vendor/autoload.php';
 $cache_file = dirname(__FILE__) . '/api-cache.array';
 $json_file = dirname(__FILE__) . '/api-cache.json';
 $settings_file = dirname(__FILE__) . '/settings.array';
+$cred_file = dirname(__FILE__) . '/settings.json';
 $purgeCache = false;
 $settings = unserialize(file_get_contents($settings_file));
+$cred = json_decode(file_get_contents($cred_file));
+$uriA = $cred->uriA;
+$uriB = $cred->uriB;
+$uriC = $cred->uriC;
+$tokenA = $cred->tokenA;
+$tokenB = $cred->tokenB;
+$tokenC = $cred->tokenC;
+
 if(empty($settings)){
   $expires = time() + 24*60*60;
   $setting = array();
@@ -24,9 +33,9 @@ if(empty($settings)){
 }
 if ( time() > $expires || empty(unserialize(file_get_contents($cache_file))) || $purgeCache) {
   $arrayQuery = array();
-  $arrayA = queryMetrics('[HostnameA]/api', '[token]');
-  $arrayB = queryMetrics('[HostnameB]/api', '[token]');
-  $arrayC = queryMetrics('[HostnameC]/api', '[token]');
+  $arrayA = queryMetrics($uriA, $tokenA);
+  $arrayB = queryMetrics($uriB, $tokenB);
+  $arrayC = queryMetrics($uriC, $tokenC);
   $arrayQuery[] = $arrayA;
   $arrayQuery[] = $arrayB;
   $arrayQuery[] = $arrayC;
@@ -36,6 +45,10 @@ if ( time() > $expires || empty(unserialize(file_get_contents($cache_file))) || 
   }else{
     unlink($cache_file);
   }
+  $expires = time() + 24*60*60;
+  $setting = array();
+  $setting['expires'] = $expires;
+  file_put_contents($settings_file, serialize($setting));
   echo json_encode($arrayQuery);
 } else {
   echo json_encode(unserialize(file_get_contents($cache_file)));
@@ -51,7 +64,7 @@ function queryMetrics($hostname, $token){
       $arrayParent = array();
       $arrayChild = array();
       $arrayParent['project'] = $project["k"];
-      $measures = $client->measures->component(['componentKey'=>$project["k"],'additionalFields'=>'periods','metricKeys'=>'bugs,reliability_rating,vulnerabilities,security_rating,code_smells,sqale_rating,coverage,new_bugs,new_coverage,new_code_smells,new_vulnerabilities']);
+      $measures = $client->measures->component(['componentKey'=>$project["k"],'additionalFields'=>'periods','metricKeys'=>'bugs,reliability_rating,new_reliability_rating,vulnerabilities,security_rating,new_security_rating,code_smells,sqale_rating,new_maintainability_rating,coverage,new_bugs,new_coverage,new_code_smells,new_vulnerabilities']);
       $measuresVal = $measures['component']['measures'];
       $periodsVal = $measures['periods'];
       foreach ($measuresVal as $measure){
@@ -61,8 +74,10 @@ function queryMetrics($hostname, $token){
           foreach($measure['periods'] as $newMeasure){
             $arrayChild[$measure['metric']] = $newMeasure['value'];
           }
+        }else if($measure['metric']=="new_reliability_rating" || $measure['metric']=="new_security_rating" || $measure['metric']=="new_maintainability_rating"){
+            $arrayChild[$measure['metric']] = ratingChecker($measure['periods'][0]['value']);
         }else{
-          $arrayChild[$measure['metric']] = $measure['value'];
+            $arrayChild[$measure['metric']] = $measure['value'];
         }
       }
       foreach ($periodsVal as $period){
